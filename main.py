@@ -39,6 +39,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 async def on_ready():
     print(f"Bot is ready. Logged in as {bot.user} (ID: {bot.user.id})")
 
+
 # Decorator to block commands on other servers and channels
 def guild_and_channel_only(ctx):
     return ctx.guild and ctx.guild.id == ALLOWED_GUILD_ID and ctx.channel.id == ALLOWED_CHANNEL_ID
@@ -110,9 +111,9 @@ async def add_member(ctx, *, args: str):
                     i += 1
                     # Sammle die Sektion
                     section_lines = []
-                    while i < len(lines) and not (lines[i].strip().startswith("**")):
-                        section_lines.append(lines[i])
-                        i += 1
+                while i < len(lines) and not (lines[i].strip().startswith("**")):
+                    section_lines.append(lines[i])
+                    i += 1
 
                     # Prüfe, ob der Member schon in der Sektion ist
                     if any(member_mention in s or member.display_name in s or member.name in s for s in section_lines):
@@ -121,9 +122,9 @@ async def add_member(ctx, *, args: str):
 
                     # Füge den Member an den Anfang der Sektion
                     if section_lines and section_lines[0].strip() == "":
-                        section_lines[0] = f"- {member_mention}"
+                        section_lines[0] = f"{member_mention}"
                     else:
-                        section_lines.insert(0, f"- {member_mention}")
+                        section_lines.insert(0, f"{member_mention}")
 
                     new_lines.extend(section_lines)
                     added = True
@@ -134,7 +135,9 @@ async def add_member(ctx, *, args: str):
             new_content = '\n'.join(new_lines)
         else:
             # Rolle existiert noch nicht in Nachricht -> neue Sektion anhängen
-            new_content = f"{current_content}\n\n**{role_name}**\n- {member_mention}"
+            new_content = f"{current_content}\n\n**{role_name}**\n{member_mention}"
+
+
 
         # Aktualisiere die Nachricht
         await target_message.edit(content=new_content)
